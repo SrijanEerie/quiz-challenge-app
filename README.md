@@ -10,9 +10,15 @@ The Quiz Challenge is a fun, interactive web-based quiz application designed to 
 - 🎯 **Score Calculation**: Earn points for correct answers and lose points for incorrect ones.
 - 🔁 **Reattempt Option**: Ability to retake the quiz after completion.
 
-## ⚙️ Setup Instructions
-To run the quiz application on your local machine:
+## 🌐 Live Demo
+[Click here to view the live app](https://srijaneerie.github.io/quiz-challenge-app/)
 
-1. **Clone the Repository**:
+## 📸 Screenshots
+![Screenshot 1](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(9).png)
+![Screenshot 2](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(8).png)
+![Screenshot 3](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(7).png)
+
+## 🚀 How to Run Locally
+1. Download the repository or clone it using:
    ```bash
    git clone https://github.com/SrijanEerie/quiz-challenge-app.git
