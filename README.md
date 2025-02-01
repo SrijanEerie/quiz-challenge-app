@@ -14,9 +14,11 @@ The Quiz Challenge is a fun, interactive web-based quiz application designed to 
 [Click here to view the live app](https://srijaneerie.github.io/quiz-challenge-app/)
 
 ## 📸 Screenshots
-![Screenshot 1](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(9).png)
+![Screenshot 1](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(7).png)
 ![Screenshot 2](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(8).png)
-![Screenshot 3](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(7).png)
+![Screenshot 3](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(9).png)
+![Screenshot 4](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(14).png)
+![Screenshot 5](https://raw.githubusercontent.com/SrijanEerie/quiz-challenge-app/main/screenshots/Screenshot%20(11).png)
 
 ## 🚀 How to Run Locally
 1. Download the repository or clone it using:
