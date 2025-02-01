@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Quiz Challenge 🎉</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #848089, #4c8a8e);
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: #76c7c0;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background: #f4f4f4;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .options li:hover {
+            background: #ccc;
+            transform: scale(1.05);
+        }
+        .options li.selected {
+            background: #76c7c0;
+            color: white;
+        }
+        .options li.correct {
+            background: #a5d6a7;
+        }
+        .options li.incorrect {
+            background: #ef9a9a;
+        }
+        .score {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+        .timer {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .feedback {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #76c7c0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #4db6ac;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Quiz Challenge 🎉</h1>
+        <button id="startBtn">Start Quiz</button>
+        <div id="quizContainer" class="hidden">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="timer" id="timer">⏳ Time Left: 10s</div>
+            <p class="question" id="question"></p>
+            <ul class="options" id="options"></ul>
+            <p class="feedback" id="feedback"></p>
+        </div>
+        <p class="score hidden" id="score"></p>
+        <button id="reattemptBtn" class="hidden">Reattempt Quiz</button>
+    </div>
+
+    <script>
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const apiUrl = 'https://api.jsonserve.com/Uw5CrX';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = [];
+        let timer;
+        let timeLeft;
+
+        document.getElementById('startBtn').addEventListener('click', async function () {
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('quizContainer').classList.remove('hidden');
+            await fetchQuestions();
+            showQuestion();
+        });
+
+        document.getElementById('reattemptBtn').addEventListener('click', function () {
+            resetQuiz();
+            document.getElementById('reattemptBtn').classList.add('hidden');
+            document.getElementById('quizContainer').classList.remove('hidden');
+            showQuestion();
+        });
+
+        async function fetchQuestions() {
+            try {
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+                if (!response.ok) throw new Error('Failed to fetch questions');
+                const data = await response.json();
+                questions = data.questions;
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                alert('Error fetching questions! Please try again.');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            clearInterval(timer);
+            timeLeft = 10;
+            document.getElementById('timer').textContent = `⏳ Time Left: ${timeLeft}s`;
+            startTimer();
+
+            const progress = document.getElementById('progress');
+            progress.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionData.description;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach(option => {
+                const li = document.createElement('li');
+                li.textContent = option.description;
+                li.addEventListener('click', () => handleAnswer(option, li));
+                optionsContainer.appendChild(li);
+            });
+        }
+
+        function handleAnswer(option, li) {
+            clearInterval(timer);
+            document.querySelectorAll('.options li').forEach(el => el.classList.remove('selected'));
+            if (li) li.classList.add('selected');
+
+            if (option.is_correct) {
+                score += 4;
+                document.getElementById('feedback').textContent = "🎉 Correct! Great job! 🎉";
+                if (li) li.classList.add('correct');
+            } else {
+                if (li) {
+                    score -= 1;
+                    document.getElementById('feedback').textContent = "❌ Incorrect! Better luck next time! ❌";
+                    li.classList.add('incorrect');
+                } else {
+                    document.getElementById('feedback').textContent = "⏰ Time's Up!";
+                }
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                document.getElementById('feedback').textContent = '';
+                showQuestion();
+            }, 1000);
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `⏳ Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleAnswer({ is_correct: false }, null);
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('score').textContent = `🏆 Final Score: ${score} / ${questions.length * 4}`;
+            document.getElementById('score').classList.remove('hidden');
+            document.getElementById('reattemptBtn').classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('progress').style.width = '0%';
+            document.getElementById('score').classList.add('hidden');
+            document.getElementById('feedback').textContent = '';
+        }
+    </script>
+</body>
+</html>
